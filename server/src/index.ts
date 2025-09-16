@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import apiRoutes from "./routes/index.js";
-import { PORT } from "./utils/env-variables.js";
+import ENV from "./utils/env-variables.js";
 
 const app = express();
 
@@ -11,6 +11,6 @@ app.use(cors());
 
 app.use("/api", apiRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+app.listen(ENV.PORT, () => {
+  console.log(`Server listening on port ${ENV.PORT}`);
 });

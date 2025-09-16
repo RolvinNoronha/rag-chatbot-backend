@@ -1,13 +1,8 @@
-import { Router, type Request, type Response } from "express";
-import { StatusCodes } from "http-status-codes";
+import { Router } from "express";
+import v1Routes from "./v1/chat-routes.js";
 
 const router = Router();
 
-router.get("/v1", (req: Request, res: Response) => {
-  res.status(StatusCodes.OK).json({
-    success: false,
-    data: "The api works!",
-  });
-});
+router.use("/v1", v1Routes);
 
 export default router;
