@@ -2,13 +2,13 @@ import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import redis from "../utils/redis-client.js";
 
-const getHistory = async (req: Request, res: Response) => {
+const getSessions = async (req: Request, res: Response) => {
   try {
-    const messages = await redis.lRange(`chat:${req.params.sessionId}`, 0, -1);
+    const sessions = await redis.lRange("sessions", 0, -1);
     return res.status(StatusCodes.OK).json({
       success: true,
       data: {
-        messages: messages.map((m) => JSON.parse(m)),
+        sessions: sessions.map((m) => JSON.parse(m)),
       },
       error: {},
     });
@@ -22,4 +22,4 @@ const getHistory = async (req: Request, res: Response) => {
   }
 };
 
-export default getHistory;
+export default getSessions;

@@ -3,8 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { StatusCodes } from "http-status-codes";
 
 import redis from "../utils/redis-client.js";
-import retrieveContext from "../utils/chromadb.js";
-import callGeminiApi from "../utils/callGeminiApi.js";
 
 const chatController = async (req: Request, res: Response) => {
   try {
@@ -17,23 +15,15 @@ const chatController = async (req: Request, res: Response) => {
       JSON.stringify({ role: "user", content: message })
     );
 
-    // Retrieve relevant context from vector DB
-    const context = await retrieveContext(message);
-
-    // Call Gemini with context
-    const botResponse = await callGeminiApi(context, message);
-
-    // Save bot response
     await redis.rPush(
-      `chat:${sid}`,
-      JSON.stringify({ role: "bot", content: botResponse })
+      `sessions`,
+      JSON.stringify({ sessionId: sid, text: message })
     );
 
     return res.status(StatusCodes.CREATED).json({
       success: true,
       data: {
         sessionId: sid,
-        response: botResponse,
       },
       error: {},
     });
