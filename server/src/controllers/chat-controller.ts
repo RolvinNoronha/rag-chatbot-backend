@@ -15,10 +15,12 @@ const chatController = async (req: Request, res: Response) => {
       JSON.stringify({ role: "user", content: message })
     );
 
-    await redis.rPush(
-      `sessions`,
-      JSON.stringify({ sessionId: sid, text: message })
-    );
+    if (!sessionId) {
+      await redis.rPush(
+        `sessions`,
+        JSON.stringify({ sessionId: sid, text: message })
+      );
+    }
 
     return res.status(StatusCodes.CREATED).json({
       success: true,

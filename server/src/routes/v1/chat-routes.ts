@@ -7,7 +7,7 @@ import streamChat from "../../controllers/stream-chat.js";
 
 const router = Router();
 
-router.get("/stream-chat", streamChat);
+router.post("/stream-chat", streamChat);
 router.post("/chat", chatController);
 
 router.get("/sessions", getSessions);

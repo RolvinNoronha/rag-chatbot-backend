@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import type { Request, Response } from "express";
 import retrieveContext from "../utils/chroma-db.js";
 import callGeminiApi from "../utils/gemini-api.js";
-import normalizeMessages from "../utils/normalize-messages.js";
+import { normalizeCandidates } from "../utils/normalize-messages.js";
 import redis from "../utils/redis-client.js";
 
 const streamChat = async (req: Request, res: Response) => {
@@ -23,13 +23,13 @@ const streamChat = async (req: Request, res: Response) => {
 
     // Call Gemini with context
     const botResponse = await callGeminiApi(context, message);
-    const result = normalizeMessages(botResponse);
+
+    const result = normalizeCandidates(botResponse);
 
     // Save bot response
-    await redis.rPush(
-      `chat:${sessionId}`,
-      JSON.stringify({ role: "bot", content: result })
-    );
+    for (const r of result) {
+      await redis.rPush(`chat:${sessionId}`, JSON.stringify(r));
+    }
 
     return res.status(StatusCodes.OK).json({
       success: true,

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import redis from "../utils/redis-client.js";
-import normalizeMessages from "../utils/normalize-messages.js";
+import { normalizeMessages } from "../utils/normalize-messages.js";
 
 const getSession = async (req: Request, res: Response) => {
   try {

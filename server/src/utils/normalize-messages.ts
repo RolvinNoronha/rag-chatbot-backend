@@ -1,4 +1,4 @@
-const normalizeMessages = (messages: string[]) => {
+export const normalizeMessages = (messages: string[]) => {
   return messages.map((message) => {
     const msg = JSON.parse(message);
     // If content is already a string (like user messages)
@@ -32,4 +32,15 @@ const normalizeMessages = (messages: string[]) => {
   });
 };
 
-export default normalizeMessages;
+export const normalizeCandidates = (input: any) => {
+  if (!input?.candidates) return [];
+
+  return input.candidates.map((candidate: any) => {
+    const role = candidate.content?.role || "";
+    // Join all parts text for this candidate
+    const content = (candidate.content?.parts || [])
+      .map((part: any) => part.text)
+      .join(" ");
+    return { role, content };
+  });
+};
