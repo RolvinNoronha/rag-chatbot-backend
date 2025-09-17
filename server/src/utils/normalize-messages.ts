@@ -1,7 +1,6 @@
 export const normalizeMessages = (messages: string[]) => {
   return messages.map((message) => {
     const msg = JSON.parse(message);
-    // If content is already a string (like user messages)
     if (typeof msg.content === "string") {
       return {
         role: msg.role,
@@ -9,7 +8,6 @@ export const normalizeMessages = (messages: string[]) => {
       };
     }
 
-    // If content is from a bot with candidates and parts
     if (msg.content && Array.isArray(msg.content.candidates)) {
       // Collect all candidate/part texts into one string
       const extracted = msg.content.candidates
@@ -24,7 +22,6 @@ export const normalizeMessages = (messages: string[]) => {
       };
     }
 
-    // Fallback in case structure is unexpected
     return {
       role: msg.role,
       content: "",
@@ -37,7 +34,7 @@ export const normalizeCandidates = (input: any) => {
 
   return input.candidates.map((candidate: any) => {
     const role = candidate.content?.role || "";
-    // Join all parts text for this candidate
+
     const content = (candidate.content?.parts || [])
       .map((part: any) => part.text)
       .join(" ");

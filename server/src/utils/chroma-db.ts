@@ -1,20 +1,22 @@
-import { ChromaClient, type Collection } from "chromadb";
+import { CloudClient, type Collection } from "chromadb";
 import { DefaultEmbeddingFunction } from "@chroma-core/default-embed";
+import ENV from "./env-variables.js";
 
 let collection: Collection;
-const initazeChroma = async () => {
+const initiazeChroma = async () => {
   // Initialize with default settings
   const embedder = new DefaultEmbeddingFunction();
 
-  //   // Or customize the configuration
-  //   const customEmbedder = new DefaultEmbeddingFunction({
-  //     modelName: "Xenova/all-MiniLM-L6-v2", // Default model
-  //     revision: "main",
-  //     dtype: "fp32", // or 'uint8' for quantization
-  //     wasm: false, // Set to true to use WASM backend
-  //   });
+  // connect chromadb locally
+  // const client = new ChromaClient({ host: "localhost", port: 8000 });
 
-  const client = new ChromaClient({ host: "localhost", port: 8000 });
+  // @ts-ignore
+  const client = new CloudClient({
+    apiKey: ENV.CHROMA_CLOUD_API_KEY,
+    tenant: ENV.CHROMA_CLOUD_TENANT,
+    database: ENV.CHROMA_CLOUD_DB_NAME,
+  });
+
   collection = await client.getCollection({
     name: "news",
     embeddingFunction: embedder,
@@ -30,6 +32,6 @@ const retrieveContext = async (query: string) => {
   return results.documents.flat().join("\n");
 };
 
-initazeChroma();
+initiazeChroma();
 
 export default retrieveContext;

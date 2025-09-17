@@ -10,13 +10,6 @@ const callGeminiApi = async (context: string, query: string) => {
   Answer clearly based only on the context.
   `;
 
-  // const res = await axios.post(
-  //   `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${ENV.GEMINI_API_KEY}`,
-  //   {
-  //     contents: [{ parts: [{ text: prompt }] }],
-  //   }
-  // );
-
   const response = await axios.post(
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
     {
